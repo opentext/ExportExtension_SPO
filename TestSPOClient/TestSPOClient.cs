@@ -94,8 +94,7 @@ namespace CaptureCenter.SPO
         {
             SPOClient spoc = createClient(testsystems.Where(n => n.TestSystemName == "vmsp2013").First()) as SPOClient;
             spoc.Login();
-
-            
+ 
         }
         #endregion
 
