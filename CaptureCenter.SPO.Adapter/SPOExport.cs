@@ -37,11 +37,12 @@ namespace CaptureCenter.SPO
                     fields.Add(spof);
                 }
             }
-            spoClient.AddDocument(
+            int itemId = spoClient.AddDocument(
                 mySettings.SelectedList,
                 getRelativePath(fieldlist) + targetFileName + ".pdf",
                 document.PDFFileName,
                 fields);
+            document.TargetDocumentId = itemId.ToString();
         }
 
         public string getRelativePath(SIEEFieldlist fieldlist)
