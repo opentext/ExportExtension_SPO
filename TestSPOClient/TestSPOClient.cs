@@ -88,6 +88,7 @@ namespace CaptureCenter.SPO
 
         #region Test and explore
         [TestMethod]
+        [Ignore]
         [TestCategory("SharePoint client test")]
         /// This is not really a unit test but some place to play around.
         public void t00_TestAndExplore()
