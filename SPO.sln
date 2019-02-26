@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaptureCenter.SPO.Adapter",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F7307D60-4A4A-4BB3-A0B6-64C7CC0D4CD1}"
 	ProjectSection(SolutionItems) = preProject
-		How to use the SharePoint Online coneector.docx = How to use the SharePoint Online coneector.docx
+		How to use the SharePoint Online connector.docx = How to use the SharePoint Online connector.docx
 		ToDo.txt = ToDo.txt
 	EndProjectSection
 EndProject
