@@ -69,6 +69,12 @@ namespace CaptureCenter.SPO
                 SendPropertyChanged();
             }
         }
+        public bool UseUserOverride
+        {
+            get { return settings.UseUserOverride; }
+            set { settings.UseUserOverride = value; SendPropertyChanged(); }
+        }
+
         #endregion
 
         #region Functions

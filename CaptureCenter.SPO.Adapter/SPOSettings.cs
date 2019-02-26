@@ -28,6 +28,7 @@ namespace CaptureCenter.SPO
             FolderName = "<Enter name of folder>";
             FieldName = "<Enter name of OCC field>";
             SelectedCultureInfoName = CultureInfo.CurrentCulture.Name;
+            UseUserOverride = true;
 
             // Folder
             FolderHandling = FolderHandlingType.None;
@@ -107,6 +108,13 @@ namespace CaptureCenter.SPO
         {
             get { return selectedCultureInfoName; }
             set { SetField(ref selectedCultureInfoName, value); }
+        }
+
+        private bool useUserOverride;
+        public bool UseUserOverride
+        {
+            get { return useUserOverride; }
+            set { SetField(ref useUserOverride, value); }
         }
         #endregion
 
@@ -204,7 +212,7 @@ namespace CaptureCenter.SPO
             spoc.Username = Username;
             spoc.SetPassowrd(PasswordEncryption.Decrypt(Password));
             spoc.Office365 = Office365;
-            spoc.ClientCulture = new CultureInfo(SelectedCultureInfoName);
+            spoc.ClientCulture = new CultureInfo(SelectedCultureInfoName, UseUserOverride);
         }
 
         public override SIEEFieldlist CreateSchema()

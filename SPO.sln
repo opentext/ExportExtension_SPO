@@ -24,6 +24,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAndExplore", "TestAndExplore\TestAndExplore.csproj", "{1227CCEF-5AEE-4533-B4F5-BF29C37D1CAF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAppSIEE", "..\ExportExtensionCommon\TestAppSIEE\TestAppSIEE.csproj", "{D4718809-84C7-4B0B-99D7-D433C04724AF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1408BE79-ADF9-4767-A497-6338124847A3} = {1408BE79-ADF9-4767-A497-6338124847A3}
+		{DAD9FF7E-A2ED-4B94-94C6-7C45DB3ABD4D} = {DAD9FF7E-A2ED-4B94-94C6-7C45DB3ABD4D}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

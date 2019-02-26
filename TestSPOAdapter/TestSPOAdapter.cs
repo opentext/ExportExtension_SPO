@@ -205,10 +205,12 @@ namespace CaptureCenter.SPO
         #region Subfolder handling
         [TestMethod]
         [TestCategory("SharePoint adapter")]
+        // Simulate some exports and verify the final location
         public void t05_SubfolderHandling()
         {
             SPOViewModel vm = createViewModel();
 
+            // Create schema based on mocked SPOList
             vm.LT.SelectedList = new SPOList() { Title = "SomeList" };
             vm.LoadFieldsButtonHandler();
             SIEEFieldlist schema = vm.Settings.CreateSchema();
@@ -220,7 +222,7 @@ namespace CaptureCenter.SPO
 
             SIEEDocument document = new SIEEDocument() { PDFFileName = "file.pdf" };
 
-            SPOClientMock spoClient = new SPOClientMock();
+            SPOClientMock spoClient = vm.SPOClient as SPOClientMock; // was: new SPOClientMock();
             SPOExport export = new SPOExport(spoClient);
             string documentName = "abc/document";
 
@@ -228,39 +230,49 @@ namespace CaptureCenter.SPO
             {
                 new {
                     n = 0, folderType = SPOSettings.FolderHandlingType.None,
-                    folder = string.Empty, field = false,
+                    folder = string.Empty, auxField = false, expError = false,
                     fieldContent = string.Empty,
                     result = documentName, },
                 new {
                     n = 1, folderType = SPOSettings.FolderHandlingType.Folder,
-                    folder = "sub/subsub", field = false,
+                    folder = "sub/subsub", auxField = false, expError = false,
                     fieldContent = string.Empty,
                     result = "sub/subsub/" + documentName, },
                 new {
                     n = 2, folderType = SPOSettings.FolderHandlingType.Folder,
-                    folder = "/sub/subsub/", field = false,
+                    folder = "/sub/subsub/", auxField = false, expError = false,
                     fieldContent = string.Empty,
                     result = "sub/subsub/" + documentName, },
                 new {
                     n = 3, folderType = SPOSettings.FolderHandlingType.Folder,
-                    folder = "/", field = false,
+                    folder = "/", auxField = false, expError = false,
                     fieldContent = string.Empty,
                     result = documentName, },
                 new {
                     n = 4, folderType = SPOSettings.FolderHandlingType.Field,
-                    folder = string.Empty, field = true,
+                    folder = string.Empty, auxField = false, expError = false,
                     fieldContent = "sub/subsub",
                     result = "sub/subsub/" + documentName, },
                 new {
                     n = 5, folderType = SPOSettings.FolderHandlingType.Field,
-                    folder = string.Empty, field = true,
+                    folder = string.Empty, auxField = false, expError = false,
                     fieldContent = "/sub/subsub/",
                     result = "sub/subsub/" + documentName, },
                 new {
                     n = 6, folderType = SPOSettings.FolderHandlingType.Field,
-                    folder = string.Empty, field = true,
+                    folder = string.Empty, auxField = false, expError = false,
                     fieldContent = "/",
                     result = documentName, },
+                new {
+                    n = 7, folderType = SPOSettings.FolderHandlingType.Field,
+                    folder = string.Empty, auxField = true, expError = false,
+                    fieldContent = "/sub/subsub/",
+                    result = "sub/subsub/" + documentName, },
+                new {
+                    n = 8, folderType = SPOSettings.FolderHandlingType.Field,
+                    folder = string.Empty, auxField = true, expError = true,
+                    fieldContent = "/sub/subsub/",
+                    result = "sub/subsub/" + documentName, },
             };
             int doOnly = -1;
             for (int i = 0; i != td.Length; i++)
@@ -270,16 +282,37 @@ namespace CaptureCenter.SPO
                 vm.FT.FolderHandling = SPOSettings.FolderHandlingType.None;
                 vm.FT.FolderName = td[i].folder;
                 vm.FT.FieldName = string.Empty;
-                if (td[i].field)
+
+                document.AuxFields = new SIEEFieldlist();
+
+                if (td[i].folderType == SPOSettings.FolderHandlingType.Field)
                 {
-                    vm.FT.FieldName = "SomeName";
-                    schema.Where(n => n.Name == "SomeName").First().Value = td[i].fieldContent;
+                    if (td[i].auxField == false)
+                    {
+                        vm.FT.FieldName = "SomeName";
+                        schema.Where(n => n.Name == "SomeName").First().Value = td[i].fieldContent;
+                    } else
+                    {
+                        vm.FT.FieldName = "auxField" + (td[i].expError ? "-err" : "");
+                        document.AuxFields.Add(new SIEEField("auxField", "", td[i].fieldContent));
+                    }
                 }
                 vm.FT.FolderHandling = td[i].folderType;
-
+                document.Fieldlist = schema;
+                
                 export.Init(vm.Settings);
-                export.ExportDocument(vm.Settings, document, documentName, schema);
-                Assert.AreEqual(td[i].result + ".pdf", spoClient.LastExportResult.DocumentPath);
+                bool exception = false;
+                try
+                {
+                    export.ExportDocument(vm.Settings, document, documentName, schema);
+                } catch { exception = true; }
+                if (td[i].expError)
+                    Assert.IsTrue(exception);
+                else
+                {
+                    Assert.IsFalse(exception);
+                    Assert.AreEqual(td[i].result + ".pdf", spoClient.LastExportResult.DocumentPath);
+                }
             }
             Assert.IsTrue(doOnly < 0, "Not all tests executed");
         }

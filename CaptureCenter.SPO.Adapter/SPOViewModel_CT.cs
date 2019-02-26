@@ -31,21 +31,21 @@ namespace CaptureCenter.SPO
         #endregion
 
         #region Properties ConnectionTab
-        string SiteUrl_name = "SiteUrl";
+        readonly string  SiteUrl_name = "SiteUrl";
         public string SiteUrl
         {
             get { return settings.SiteUrl; }
             set { settings.SiteUrl = value; SendPropertyChanged(); }
         }
 
-        string Username_name = "Username";
+        readonly string Username_name = "Username";
         public string Username
         {
             get { return settings.Username; }
             set { settings.Username = value; SendPropertyChanged(); }
         }
 
-        string Office365_name = "Office365";
+        readonly string Office365_name = "Office365";
         public bool Office365
         {
             get { return settings.Office365; }
@@ -54,7 +54,7 @@ namespace CaptureCenter.SPO
         #endregion
 
         #region Password
-        string Password_name = "Password";
+        readonly string Password_name = "Password";
         public string Password
         {
             get {
@@ -113,13 +113,15 @@ namespace CaptureCenter.SPO
             settings.InitializeSPOClient(vm.SPOClient);
 
             VmTestResultDialog vmConnectionTestResultDialog = new VmTestResultDialog();
-            ConnectionTestHandler = new SPOConnectionTestHandler(vmConnectionTestResultDialog);
-            ConnectionTestHandler.CallingViewModel = this;
-
-            connectionTestResultDialog = new ConnectionTestResultDialog(ConnectionTestHandler);
-            connectionTestResultDialog.DataContext = vmConnectionTestResultDialog;
-            connectionTestResultDialog.ShowInTaskbar = false;
-
+            ConnectionTestHandler = new SPOConnectionTestHandler(vmConnectionTestResultDialog)
+            {
+                CallingViewModel = this
+            };
+            connectionTestResultDialog = new ConnectionTestResultDialog(ConnectionTestHandler)
+            {
+                DataContext = vmConnectionTestResultDialog,
+                ShowInTaskbar = false,
+            };
             //The test environment is Winforms, we then set the window to topmost.
             //In OCC we we can set the owner property
             if (Application.Current == null)

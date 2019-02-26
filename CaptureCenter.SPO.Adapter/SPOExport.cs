@@ -39,20 +39,26 @@ namespace CaptureCenter.SPO
             }
             int itemId = spoClient.AddDocument(
                 mySettings.SelectedList,
-                getRelativePath(fieldlist) + targetFileName + ".pdf",
+                getRelativePath(document) + targetFileName + ".pdf",
                 document.PDFFileName,
                 fields);
             document.TargetDocumentId = itemId.ToString();
         }
 
-        public string getRelativePath(SIEEFieldlist fieldlist)
+        public string getRelativePath(SIEEDocument doc)
         {
             switch (mySettings.FolderHandling)
             {
                 case SPOSettings.FolderHandlingType.Folder:
                     return normalizePath(mySettings.FolderName);
                 case SPOSettings.FolderHandlingType.Field:
-                    return normalizePath(fieldlist.Where(n => n.Name == mySettings.FieldName).First().Value);
+                    {
+                        SIEEField f = doc.Fieldlist.Where(n => n.Name == mySettings.FieldName).FirstOrDefault();
+                        if (f != null) return normalizePath(f.Value);
+                        f = doc.AuxFields.Where(n => n.Name == mySettings.FieldName).FirstOrDefault();
+                        if (f != null) return normalizePath(f.Value);
+                        throw new Exception($"Could not find field: {mySettings.FieldName}");  
+                    }
                 case SPOSettings.FolderHandlingType.Auto:
                     return normalizePath(getAutoPath());
                 case SPOSettings.FolderHandlingType.None:

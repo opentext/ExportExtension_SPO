@@ -173,8 +173,7 @@ namespace CaptureCenter.SPO
 
                 // A custom defined field can be identified the SourceID attribute is a GUID
                 XElement fl = XElement.Parse(f.SchemaXml);
-                Guid xx;
-                bool customField = (Guid.TryParse(fl.Attribute("SourceID").Value, out xx));
+                bool customField = (Guid.TryParse(fl.Attribute("SourceID").Value, out Guid xx));
                 bool forcedField = forcedFields.Contains(f.Title);
 
                 if ( !(forcedField || customField) ) continue;
@@ -261,10 +260,12 @@ namespace CaptureCenter.SPO
                     f = f.Folders.Add(folder);
 
             // Create the document in SharePoint
-            FileCreationInformation fci = new FileCreationInformation();
-            fci.Url = documentName;
-            fci.Overwrite = true;
-            fci.Content = System.IO.File.ReadAllBytes(filePath);
+            FileCreationInformation fci = new FileCreationInformation()
+            {
+                Url = documentName,
+                Overwrite = true,
+                Content = System.IO.File.ReadAllBytes(filePath),
+            };
             Microsoft.SharePoint.Client.File uploadedFile = f.Files.Add(fci);
 
             // Add the attribute values. Title defaults to the document name.
@@ -340,9 +341,11 @@ namespace CaptureCenter.SPO
             // Attach the file
             if (documentPath != null)
             {
-                AttachmentCreationInformation attachment = new AttachmentCreationInformation();
-                attachment.FileName = documentName;
-                attachment.ContentStream = new MemoryStream(System.IO.File.ReadAllBytes(filePath));
+                AttachmentCreationInformation attachment = new AttachmentCreationInformation()
+                {
+                    FileName = documentName,
+                    ContentStream = new MemoryStream(System.IO.File.ReadAllBytes(filePath))
+                };
                 Attachment att = newItem.AttachmentFiles.Add(attachment);
                 context.Load(att);
             }
@@ -371,10 +374,12 @@ namespace CaptureCenter.SPO
         // FolderUrl must not be set when the folder is created directly under the root.
         private void createFolder(List spList, string path, string foldername)
         {
-            var folderCreateInfo = new ListItemCreationInformation();
-            folderCreateInfo.FolderUrl = path;
-            folderCreateInfo.LeafName = foldername;
-            folderCreateInfo.UnderlyingObjectType = FileSystemObjectType.Folder;
+            var folderCreateInfo = new ListItemCreationInformation()
+            {
+                FolderUrl = path,
+                LeafName = foldername,
+                UnderlyingObjectType = FileSystemObjectType.Folder,
+            };
             ListItem folderItem = spList.AddItem(folderCreateInfo);
             folderItem["Title"] = foldername;
             folderItem.Update();
@@ -440,11 +445,13 @@ namespace CaptureCenter.SPO
 
         private List<string> getAllFolderNames(List spList)
         {
-            CamlQuery camlQuery = new CamlQuery();
-            camlQuery.ViewXml =
-                "<View Scope='RecursiveAll'> <Query> <Where> <Eq>" +
-                "<FieldRef Name='FSObjType' /><Value Type='Integer'>1</Value>" +
-                "</Eq> </Where> </Query> </View>";
+            CamlQuery camlQuery = new CamlQuery()
+            {
+                ViewXml =
+                    "<View Scope='RecursiveAll'> <Query> <Where> <Eq>" +
+                    "<FieldRef Name='FSObjType' /><Value Type='Integer'>1</Value>" +
+                    "</Eq> </Where> </Query> </View>"
+            };
             ListItemCollection collListItem = spList.GetItems(camlQuery);
             context.Load(collListItem);
             context.ExecuteQuery();
@@ -478,12 +485,14 @@ namespace CaptureCenter.SPO
             context.ExecuteQuery();
             string path = spList.RootFolder.ServerRelativeUrl + "/" + documentPath;
 
-            CamlQuery query = new CamlQuery();
-            query.ViewXml = "<View Scope='RecursiveAll'>"
+            CamlQuery query = new CamlQuery()
+            {
+                ViewXml = "<View Scope='RecursiveAll'>"
                + "<Query>"
-               + "<Where><Eq><FieldRef Name='FileRef'/><Value Type='File'>" + path + "</Value></Eq></Where>"
+               + $"<Where><Eq><FieldRef Name='FileRef'/><Value Type='File'>{path}</Value></Eq></Where>"
                + "</Query>"
-               + "</View>";
+               + "</View>"
+            };
             // execute the query                
             ListItemCollection listItems = spList.GetItems(query);
             context.Load(listItems);
@@ -514,9 +523,13 @@ namespace CaptureCenter.SPO
 
         public SPOList CreateList(string title, bool isLibrary, List<FieldSpec> fieldSpecs = null)
         {
-            ListCreationInformation lci = new ListCreationInformation();
-            lci.Title = title;
-            lci.TemplateType = isLibrary ? (int)ListTemplateType.DocumentLibrary : (int)ListTemplateType.GenericList;
+            ListCreationInformation lci = new ListCreationInformation()
+            {
+                Title = title,
+                TemplateType = isLibrary ? 
+                    (int)ListTemplateType.DocumentLibrary : 
+                    (int)ListTemplateType.GenericList
+            };
             List spList = context.Web.Lists.Add(lci);
             context.Load(spList);
             spList.Update();

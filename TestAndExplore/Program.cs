@@ -33,25 +33,5 @@ namespace TestAndExplore
             foreach (string lib in libraries)
                 Console.WriteLine(lib);
         }
-
-        static void Logon()
-        {
-            string library = "Some library";
-            string user = "johannes";
-            string password = "opentext";
-            // Do the logon
-        }
-
-        static void ReadSomeFolder()
-        {
-            Logon();
-            // Get some aribitrary folder one or twoo levels down the folder tree
-        }
-
-        static void StoreDocument()
-        {
-            string document = @"c:\temp\document.pdf";
-            // Store document in the folder
-        }
     }
 }

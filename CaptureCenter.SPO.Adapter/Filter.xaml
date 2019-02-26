@@ -165,7 +165,7 @@
 
                         <DataGrid.Columns>
                             <DataGridTextColumn 
-                                Header="Title)" MinWidth="150" Width="3*"
+                                Header="Title" MinWidth="150"
                                 Binding="{Binding Pattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             >
                             </DataGridTextColumn>

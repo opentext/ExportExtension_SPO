@@ -49,10 +49,10 @@ namespace CaptureCenter.SPO
             },
         };
 
-        private string testDocument;
+        readonly private string testDocument;
         private const string unitTestLibrary = "OccUnitTestLibrary";
         private const string unitTestList = "OccUnitTestList";
-        private bool reallyRemoveStuff = false;
+        readonly private bool reallyRemoveStuff = false;
 
         public TestSPOClient()
         {
@@ -93,7 +93,12 @@ namespace CaptureCenter.SPO
         /// This is not really a unit test but some place to play around.
         public void t00_TestAndExplore()
         {
-            SPOClient spoc = createClient(testsystems.Where(n => n.TestSystemName == "vmsp2013").First()) as SPOClient;
+            CultureInfo ci = new CultureInfo("en-US", false);
+            DateTime dt;
+            dt = DateTime.Parse("february/15/2017", ci);
+            dt = DateTime.Parse("02/15/2017", ci);
+
+             SPOClient spoc = createClient(testsystems.Where(n => n.TestSystemName == "vmsp2013").First()) as SPOClient;
             spoc.Login();
  
         }
@@ -326,7 +331,7 @@ namespace CaptureCenter.SPO
                 string name = "a" + td[i].type;
                 string type = td[i].type;
                 spoc.AddFieldToList(spol, new SPOClient.FieldSpec() { Name = name, Type = type });
-                spoc.ClientCulture = new CultureInfo(td[i].culture);
+                spoc.ClientCulture = new CultureInfo(td[i].culture, false);
                 testOneType(spoc, spol,type, name, td[i].value);
                 spoc.DeleteField(spol, name);
             }
