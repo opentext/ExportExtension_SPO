@@ -206,40 +206,37 @@
                     </DataGrid>
                 </GroupBox>
 
-                <GroupBox
-                    Grid.Row="3" Grid.Column="0" Margin="5"
-                    Header="Culture settings"
+                <Grid 
+                    Grid.Row="3" Grid.ColumnSpan="2" Margin="5"
                     >
-                    <Grid 
-                        Margin="5"
-                        >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                        <Label
-                            Grid.Row="0" Grid.Column="0" Margin="0" 
-                            VerticalContentAlignment="Center"
-                            Content="Culture:"
+                    <Label
+                        Grid.Row="0" Grid.Column="0" Margin="0" 
+                        VerticalContentAlignment="Center"
+                        Content="Culture:"
+                        ToolTip="Used to parse OCC's result during export"
+                    />
+                    <ComboBox
+                        Grid.Row="0" Grid.Column="1" Margin="5" Padding="5"
+                        VerticalContentAlignment="Center"
+                        HorizontalAlignment="Stretch"
+                        ItemsSource="{Binding LT.Cultures}"
+                        DisplayMemberPath="DisplayName"
+                        SelectedItem="{Binding LT.SelectedCulture}"
+                    />
+                    <CheckBox
+                        Grid.Row="01" Grid.Column="2" Margin="5" Padding="5"
+                        VerticalContentAlignment="Center"
+                        Content="User setting override"
+                        IsChecked="{Binding LT.UseUserOverride}"
+                        Visibility="Collapsed"
                         />
-                        <ComboBox
-                            Grid.Row="0" Grid.Column="1" Margin="5" Padding="5"
-                            VerticalContentAlignment="Center"
-                            HorizontalAlignment="Stretch"
-                            ItemsSource="{Binding LT.Cultures}"
-                            DisplayMemberPath="DisplayName"
-                            SelectedItem="{Binding LT.SelectedCulture}"
-                        />
-                        <CheckBox
-                            Grid.Row="01" Grid.Column="2" Margin="5" Padding="5"
-                            VerticalContentAlignment="Center"
-                            Content="User setting overritde"
-                            IsChecked="{Binding LT.UseUserOverride}"
-                            />
-                    </Grid>
-                </GroupBox>
+                </Grid>
             </Grid>
         </TabItem>
 
@@ -264,7 +261,8 @@
                     VerticalContentAlignment="Center"
                     Name="folderHandling_radioButton_none"
                     GroupName="FolderHandling" 
-                    Content="No folder usage"
+                    Content="No folder"
+                    ToolTip="Store documents in the root of list or library"
                     IsChecked="{Binding Path=FT.FolderHandling, Mode=TwoWay, 
                                  Converter={StaticResource EnumMatchToBooleanConverter},
                                  ConverterParameter=None}" 
@@ -275,6 +273,7 @@
                     Name="folderHandling_radioButton_folder"
                     GroupName="FolderHandling" 
                     Content="Fixed folder"
+                    ToolTip="Enter the name of the folder into which the document are to be saved"
                     IsChecked="{Binding Path=FT.FolderHandling, Mode=TwoWay, 
                                  Converter={StaticResource EnumMatchToBooleanConverter},
                                  ConverterParameter=Folder}" 
@@ -285,6 +284,7 @@
                     Name="folderHandling_radioButton_field"
                     GroupName="FolderHandling" 
                     Content="Dynamic folder"
+                    ToolTip="Enter the name of a document field; the fields content will determine the target folder"
                     IsChecked="{Binding Path=FT.FolderHandling, Mode=TwoWay, 
                                  Converter={StaticResource EnumMatchToBooleanConverter},
                                  ConverterParameter=Field}" 
@@ -296,6 +296,7 @@
                     Name="folderHandling_radioButton_auto"
                     GroupName="FolderHandling" 
                     Content="Automatic folder generation"
+                    ToolTip="Automatically generate new subfolders when current folder gets full"
                     IsChecked="{Binding Path=FT.FolderHandling, Mode=TwoWay, 
                                  Converter={StaticResource EnumMatchToBooleanConverter},
                                  ConverterParameter=Auto}" 

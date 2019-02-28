@@ -169,12 +169,12 @@
                                 Binding="{Binding Pattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             >
                             </DataGridTextColumn>
-                            <DataGridTemplateColumn Header="Include">
+                            <DataGridTemplateColumn Header="Exclude">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <CheckBox
                                             HorizontalAlignment="Center" VerticalAlignment="Center"
-                                            IsChecked="{Binding Include, UpdateSourceTrigger=PropertyChanged}" />
+                                            IsChecked="{Binding Exclude, UpdateSourceTrigger=PropertyChanged}" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

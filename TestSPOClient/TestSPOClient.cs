@@ -190,9 +190,10 @@ namespace CaptureCenter.SPO
             // Test Title filters
             Assert.AreEqual(testList.Count, listFilter.Filter(testList).Count);
             Assert.AreEqual(testList.Count, listFilter.Filter(testList).Count);
-            listFilter.TitleFilters.Add(new SPOListFilter.TitleFilter() { Pattern = "List", Include = true });
-            Assert.AreEqual(testList.Count, listFilter.Filter(testList).Count);
-            listFilter.TitleFilters.Add(new SPOListFilter.TitleFilter() { Pattern = "Library", Include = false });
+            listFilter.TitleFilters.Add(new SPOListFilter.TitleFilter() { Pattern = "List", Exclude = true });
+            Assert.AreEqual(3, listFilter.Filter(testList).Count);
+            listFilter.TitleFilters.Clear();
+            listFilter.TitleFilters.Add(new SPOListFilter.TitleFilter() { Pattern = "List", Exclude = false });
             Assert.AreEqual(2, listFilter.Filter(testList).Count);
             listFilter.TitleFilters.Clear();
 
@@ -202,12 +203,12 @@ namespace CaptureCenter.SPO
             Assert.AreEqual(4, listFilter.Filter(testList).Count);
             listFilter.TypeTemplateRanges.Add(new SPOListFilter.TypeTemplateRange() { From = 101, To = 5000, });
             Assert.AreEqual(2, listFilter.Filter(testList).Count);
-            listFilter.TitleFilters.Add(new SPOListFilter.TitleFilter() { Pattern = "Library 3", Include = true });
-            Assert.AreEqual(3, listFilter.Filter(testList).Count);
+            listFilter.TitleFilters.Add(new SPOListFilter.TitleFilter() { Pattern = "Library 3", Exclude = true });
+            Assert.AreEqual(2, listFilter.Filter(testList).Count);
             listFilter.TitleFilters.Clear();
-            listFilter.TitleFilters.Add(new SPOListFilter.TitleFilter() { Pattern = "List", Include = true });
-            Assert.AreEqual(4, listFilter.Filter(testList).Count);
-            listFilter.TitleFilters.Add(new SPOListFilter.TitleFilter() { Pattern = "Library", Include = false });
+            listFilter.TitleFilters.Add(new SPOListFilter.TitleFilter() { Pattern = "List", Exclude = true });
+            Assert.AreEqual(2, listFilter.Filter(testList).Count);
+            listFilter.TitleFilters.Add(new SPOListFilter.TitleFilter() { Pattern = "Library", Exclude = false });
             Assert.AreEqual(2, listFilter.Filter(testList).Count);
         }
         #endregion

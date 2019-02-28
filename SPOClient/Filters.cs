@@ -51,11 +51,11 @@ namespace CaptureCenter.SPO
                 get { return pattern; }
                 set { verifyRegularExpression(value); SetField(ref pattern, value); }
             }
-            private bool include;
-            public bool Include
+            private bool exclude;
+            public bool Exclude
             {
-                get { return include; }
-                set { SetField(ref include, value); }
+                get { return exclude; }
+                set { SetField(ref exclude, value); }
             }
             private void verifyRegularExpression(string expression)
             {
@@ -150,18 +150,21 @@ namespace CaptureCenter.SPO
                     if (!found) include = false;
                 }
 
-                if (TitleFilters.Count > 0)
+                if (TitleFilters.Count > 0 && include)
                 {
+                    bool matchFound = false;
                     foreach (TitleFilter tf in TitleFilters)
                     {
                         Regex regex = new Regex(tf.Pattern);
                         Match match = regex.Match(l.Title);
+
                         if (match.Success)
                         {
-                            include = tf.Include;
-                            break;
+                            include = !tf.Exclude;
+                            matchFound = true;
                         }
                     }
+                    if (!matchFound) include = TitleFilters[0].Exclude;
                 }
 
                 if (include) result.Add(l);
