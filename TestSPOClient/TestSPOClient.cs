@@ -547,7 +547,7 @@ namespace CaptureCenter.SPO
             spoClient.SiteUrl = ts.SiteUrl;
             spoClient.Username = ts.Username;
             spoClient.SetPassowrd(ts.Password);
-            spoClient.ClientCulture = new CultureInfo("en-US");
+            spoClient.ClientCulture = new CultureInfo("en-US", false);
             return spoClient;
         }
 

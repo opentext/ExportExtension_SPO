@@ -62,7 +62,7 @@ namespace CaptureCenter.SPO
         }
         public CultureInfo SelectedCulture
         {
-            get { return new CultureInfo(settings.SelectedCultureInfoName); }
+            get { return new CultureInfo(settings.SelectedCultureInfoName, UseUserOverride); }
             set
             {
                 settings.SelectedCultureInfoName = value.Name;
